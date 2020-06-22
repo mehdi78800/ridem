@@ -47,10 +47,22 @@ class Router
             echo call_user_func_array($method, $routeInfo[2]);
         }
         elseif($routeInfo[0] == FastRoute\Dispatcher::NOT_FOUND){
-            echo '<h1>404 Not Found</h1>';
+            header("HTTP/1.0 404 Not Found");
+            if(method_exists('\App\Controller\ErrorController','print_404')) {
+                echo call_user_func_array([new \App\Controller\ErrorController, 'print_404'], []);
+            } else {
+                echo '<h1>404 Not Found</h1>';
+                exit();
+            }
         }
         elseif($routeInfo[0] == FastRoute\Dispatcher::METHOD_NOT_ALLOWED){
-            echo '<h1>405 Method Not Allowed</h1>';
+            header("HTTP/1.0 405 Method Not Allowed");  
+            if(method_exists('\App\Controller\ErrorController','print_405')) {
+                echo call_user_func_array([new \App\Controller\ErrorController, 'print_405'], []);
+            } else {
+                echo '<h1>405 Method Not Allowed</h1>';
+                exit();
+            }
         }
     }
 }
