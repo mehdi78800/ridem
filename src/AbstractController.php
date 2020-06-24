@@ -5,6 +5,9 @@ namespace Ridem;
 abstract class AbstractController
 {
     private $templateEngine;
+
+    private $_flashbag;
+
  
     public function __construct() 
     {
@@ -15,7 +18,28 @@ abstract class AbstractController
  
     protected function render($view, $vars = [])
     {
-        return $this->templateEngine->render($view.'.html.twig', $vars);
+        
+        return $this->templateEngine->render(
+            $view.'.html.twig', 
+            array_merge(
+                $vars,
+                ['session' => $_SESSION]
+            )
+        );
+    }
+
+    protected function flashbag()
+    {
+        if($this->_flashbag === null) {
+            $this->_flashbag = new FlashBag();
+        }
+        return $this->_flashbag;
+    }
+
+    protected function redirectToRoute(string $url)
+    {
+        header("Location: ".$url);
+        exit();
     }
 }
  
