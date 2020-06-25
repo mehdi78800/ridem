@@ -41,5 +41,14 @@ abstract class AbstractController
         header("Location: ".$url);
         exit();
     }
+
+    protected function blobify($file)
+    {
+        $img = addslashes($file);
+        $img = file_get_contents($img);
+        $img = base64_encode($img);
+        
+        return $img;
+    }
 }
  
